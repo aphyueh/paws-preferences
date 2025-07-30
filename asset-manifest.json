@@ -1,15 +1,20 @@
 {
   "files": {
-    "main.css": "/paws-preferences/static/css/main.4097fe1e.css",
-    "main.js": "/paws-preferences/static/js/main.ecf5169d.js",
+    "main.css": "/paws-preferences/static/css/main.9d033d6d.css",
+    "main.js": "/paws-preferences/static/js/main.4af639fe.js",
     "static/js/453.2649aa28.chunk.js": "/paws-preferences/static/js/453.2649aa28.chunk.js",
+    "static/media/cutecatsayinghello.png": "/paws-preferences/static/media/cutecatsayinghello.0c2f294bd2ffec739e0d.png",
+    "static/media/orangecutecat.png": "/paws-preferences/static/media/orangecutecat.9e53b2862bd47eac9513.png",
+    "static/media/bootstrap-icons.woff?": "/paws-preferences/static/media/bootstrap-icons.e559bf06bc84fd9525e6.woff",
+    "static/media/bootstrap-icons.woff2?": "/paws-preferences/static/media/bootstrap-icons.ea98e12d2d58747f9fc5.woff2",
     "index.html": "/paws-preferences/index.html",
-    "main.4097fe1e.css.map": "/paws-preferences/static/css/main.4097fe1e.css.map",
-    "main.ecf5169d.js.map": "/paws-preferences/static/js/main.ecf5169d.js.map",
+    "static/media/paw-print-bold-svgrepo-com.svg": "/paws-preferences/static/media/paw-print-bold-svgrepo-com.271aeae1795d4cdcc4f8cd4e8f1dcbf0.svg",
+    "main.9d033d6d.css.map": "/paws-preferences/static/css/main.9d033d6d.css.map",
+    "main.4af639fe.js.map": "/paws-preferences/static/js/main.4af639fe.js.map",
     "453.2649aa28.chunk.js.map": "/paws-preferences/static/js/453.2649aa28.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4097fe1e.css",
-    "static/js/main.ecf5169d.js"
+    "static/css/main.9d033d6d.css",
+    "static/js/main.4af639fe.js"
   ]
 }
