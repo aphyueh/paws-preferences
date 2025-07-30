@@ -10,13 +10,12 @@ import "./assets/css/bootstrap.min.css";
 import "./assets/css/templatemo-tiya-golf-club.css";
 
 function App() {
-  const [cats, setCats] = useState([]);
+  const [currentCat, setCurrentCat] = useState(null);
+  const [nextCat, setNextCat] = useState(null);
   const [liked, setLiked] = useState([]);
   const [swipeHistory, setSwipeHistory] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [fetchingMore, setFetchingMore] = useState(false);
-
+  const [catCounter, setCatCounter] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isHolding, setIsHolding] = useState(false);
@@ -25,28 +24,42 @@ function App() {
   const holdTimeoutRef = useRef(null);
   const startPosRef = useRef({ x: 0, y: 0 });
 
-  // Fetch more cats when running low
-  const fetchMoreCats = async () => {
-    if (fetchingMore) return;
-    
-    setFetchingMore(true);
+  // Fetch a single cat
+  const fetchSingleCat = async (catNumber) => {
     try {
-      const results = await Promise.all(
-        Array.from({ length: 5 }).map(() =>
-          fetch("https://cataas.com/cat/cute?json=true").then((res) => res.json())
-        )
-      );
-      const newCats = results.map((cat, i) => ({
+      const response = await fetch("https://cataas.com/cat/cute?json=true");
+      const cat = await response.json();
+      return {
         url: `https://cataas.com/cat/${cat.id}`,
-        name: `Cat ${cats.length + i + 1}`, 
-      }));
-      setCats(prev => [...prev, ...newCats]);
+        name: `Cat ${catNumber}`,
+        id: cat.id
+      };
     } catch (error) {
-      console.error('Failed to fetch more cats:', error);
-    } finally {
-      setFetchingMore(false);
+      console.error('Failed to fetch cat:', error);
+      return null;
     }
   };
+
+  // Load initial cats
+  useEffect(() => {
+    const loadInitialCats = async () => {
+      setLoading(true);
+      try {
+        const [current, next] = await Promise.all([
+          fetchSingleCat(1),
+          fetchSingleCat(2)
+        ]);
+        setCurrentCat(current);
+        setNextCat(next);
+        setCatCounter(3);
+      } catch (error) {
+        console.error('Failed to load initial cats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadInitialCats();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,30 +97,43 @@ function App() {
       });
     }
   };
-
-  const handleSwipe = async (direction) => {
-    const currentCat = cats[currentIndex];
+const handleSwipe = async (direction) => {
+    if (!currentCat || isSwipingAway) return;
+    
+    // Add to history
     setSwipeHistory((prev) => [...prev, { ...currentCat, direction }]);
 
     if (direction === "right") {
       setLiked((prev) => [...prev, currentCat]);
     }
+
+    // Set swiping away state
     setIsSwipingAway(true);
+    
+    // Start loading new cat immediately
+    setLoading(true);
+    const newCat = await fetchSingleCat(catCounter + 1);
+    
+    // Wait for swipe animation to complete
     setTimeout(() => {
-      setCurrentIndex((prev) => prev + 1);
+      // Move next cat to current, and new cat to next
+      setCurrentCat(nextCat);
+      setNextCat(newCat);
+      setCatCounter(prev => prev + 1);
+      
+      // Reset all states
       setIsDragging(false);
       setDragOffset({ x: 0, y: 0 });
       setIsHolding(false);
-      if (currentIndex >= cats.length - 3) {
-        fetchMoreCats();
-      }
+      setIsSwipingAway(false);
+      setLoading(false);
     }, 300);
   };
 
   // Handle mouse/touch start
   const handleStart = (e) => {
-    if (isSwipingAway) return;
-    e.preventDefault(); // Prevent default image drag behavior
+    if (isSwipingAway || loading) return;
+    e.preventDefault();
     
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -115,13 +141,15 @@ function App() {
     startPosRef.current = { x: clientX, y: clientY };
     
     holdTimeoutRef.current = setTimeout(() => {
-      setIsHolding(true);
-    }, 100); 
+      if (!isSwipingAway) {
+        setIsHolding(true);
+      }
+    }, 100);
   };
 
   // Handle mouse/touch move
   const handleMove = (e) => {
-    if (!isHolding) return;
+    if (!isHolding || isSwipingAway || loading) return;
     
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -135,78 +163,70 @@ function App() {
 
   // Handle mouse/touch end
   const handleEnd = (e) => {
-    if (isSwipingAway) return;
-    // Clear hold timer
+    if (isSwipingAway || loading) return;
+    
     if (holdTimeoutRef.current) {
       clearTimeout(holdTimeoutRef.current);
       holdTimeoutRef.current = null;
     }
 
-    // If we were dragging, check if it's a swipe
-    if (isDragging && Math.abs(dragOffset.x) > 50) {
+    // Check for swipe (reduced threshold for easier swiping)
+    if (isDragging && Math.abs(dragOffset.x) > 60) {
       const direction = dragOffset.x > 0 ? "right" : "left";
       handleSwipe(direction);
       return;
     }
 
-    // Reset states
+    // Reset states if no swipe
     setIsDragging(false);
     setDragOffset({ x: 0, y: 0 });
     setIsHolding(false);
   };
 
-  // Handle mouse leave (for scrolling away) - don't trigger actions
   const handleMouseLeave = () => {
-    // Clear hold timer but don't trigger any swipe action
     if (holdTimeoutRef.current) {
       clearTimeout(holdTimeoutRef.current);
       holdTimeoutRef.current = null;
     }
 
-    // Only reset states, don't trigger swipe
-    if (!isSwipingAway) {
+    if (!isSwipingAway && !loading) {
       setIsDragging(false);
       setDragOffset({ x: 0, y: 0 });
       setIsHolding(false);
     }
   };
 
-  // Original swipe handlers for fallback
   const handlers = useSwipeable({
-    onSwipedLeft: () => handleSwipe("left"),
-    onSwipedRight: () => handleSwipe("right"),
+    onSwipedLeft: () => !isSwipingAway && !loading && handleSwipe("left"),
+    onSwipedRight: () => !isSwipingAway && !loading && handleSwipe("right"),
     preventScrollOnSwipe: true,
     trackMouse: true,
   });
 
-  useEffect(() => {
-    const fetchCats = async () => {
-      setLoading(true);
-      try {
-        const results = await Promise.all(
-          Array.from({ length: 10 }).map(() =>
-            fetch("https://cataas.com/cat/cute?json=true").then((res) => res.json())
-          )
-        );
-        setCats(
-          results.map((cat, i) => ({
-            url: `https://cataas.com/cat/${cat.id}`,
-            name: `Cat ${i + 1}`, 
-          }))
-        );
-      } catch (error) {
-        console.error('Failed to fetch cats:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCats();
-  }, []);
 
-  const currentCat = cats[currentIndex];
-  const nextCat = cats[currentIndex + 1];
-  const isEnd = currentIndex >= cats.length;
-
+  // useEffect(() => {
+  //   const fetchCats = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const results = await Promise.all(
+  //         Array.from({ length: 10 }).map(() =>
+  //           fetch("https://cataas.com/cat/cute?json=true").then((res) => res.json())
+  //         )
+  //       );
+  //       setCats(
+  //         results.map((cat, i) => ({
+  //           url: `https://cataas.com/cat/${cat.id}`,
+  //           name: `Cat ${i + 1}`, 
+  //         }))
+  //       );
+  //     } catch (error) {
+  //       console.error('Failed to fetch cats:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchCats();
+  // }, []);
   // Calculate card transform and styling
   const getCardStyle = (isNext = false) => {
     if (isNext) {
@@ -217,8 +237,9 @@ function App() {
         zIndex: 1,
       };
     }
+
     if (isSwipingAway) {
-      const swipeDirection = dragOffset.x > 0 ? 1 : -1;
+      const swipeDirection = dragOffset.x > 0 ? 1 : (dragOffset.x < 0 ? -1 : 1);
       return {
         transform: `translateX(${swipeDirection * 400}px) rotate(${swipeDirection * 30}deg)`,
         opacity: 0,
@@ -226,8 +247,9 @@ function App() {
         zIndex: 3,
       };
     }
-    const rotation = dragOffset.x * 0.1; // Slight rotation based on drag
-    const opacity = Math.max(0.7, 1 - Math.abs(dragOffset.x) / 300);
+
+    const rotation = dragOffset.x * 0.15;
+    const opacity = Math.max(0.6, 1 - Math.abs(dragOffset.x) / 200);
     
     return {
       transform: `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${rotation}deg)`,
@@ -238,11 +260,11 @@ function App() {
     };
   };
 
+  // Enhanced overlay styling
   const getOverlayStyle = () => {
-    if (!isDragging && !isSwipingAway) return { display: 'none'};
+    if (!isDragging && !isSwipingAway) return { display: 'none' };
     
     const intensity = Math.min(Math.abs(dragOffset.x) / 100, 1);
-    const isRight = dragOffset.x > 0;
     
     return {
       position: 'absolute',
@@ -258,7 +280,7 @@ function App() {
     };
   };
 
-  if (loading) {
+  if (loading && !currentCat) {
     return (
       <div id="section_2" className="events-section section-bg section-padding"
            style={{ backgroundColor: "#F4F1DE" }}>
@@ -275,6 +297,21 @@ function App() {
       </div>
     );
   }
+
+  if (!currentCat) {
+    return (
+      <div id="section_2" className="events-section section-bg section-padding"
+           style={{ backgroundColor: "#F4F1DE" }}>
+        <div className="container" style={{ backgroundColor: "#F4F1DE" }}>
+          <div className="col-lg-12 col-12 text-center mx-auto mb-lg-5 mb-4">
+            <h2><span>NO</span> CATS AVAILABLE</h2>
+          </div>
+          <p className="text-center mb-0">Unable to load cats 😿</p>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div >
@@ -296,56 +333,12 @@ function App() {
           <div class="col-lg-6 col-12 text-center mb-3 mb-lg-0">
             <h4 class="mb-4 pb-lg-2">Hold and drag left to 💔, right to ❤️</h4>
           </div>
-          {isEnd ? (
-              <p className="text-center mb-0">No more cats! 🐱</p>
-          ) : (
           <div {...handlers} className="d-flex justify-content-center align-items-center">
-            <div style={{ position: 'relative', width: '400px', height: '600px' }}>
-              
-              {/* Next card (underneath) */}
-              {nextCat && (
-                <Card
-                  className="w-full shadow-md select-none"
-                  style={{ 
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    maxWidth: '50vw',
-                    maxHeight: '100vh',
-                    width: '400px',
-                    height: '600px',
-                    ...getCardStyle(true),
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    MozUserSelect: 'none',
-                    msUserSelect: 'none'
-                  }}
-                >
-                  <CardImg
-                    top
-                    src={nextCat.url}
-                    alt={nextCat.name}
-                    className="w-full object-cover rounded-t"
-                    draggable={false}
-                    style={{ 
-                      height: 'calc(100% - 60px)', 
-                      maxHeight: 'calc(100vh - 100px)', 
-                      userSelect: 'none',
-                      WebkitUserSelect: 'none',
-                      pointerEvents: 'none'
-                    }}
-                  />
-                  <CardBody className="p-4">
-                    <CardTitle tag="h5" className="font-semibold text-sm text-center">
-                      {nextCat.name}
-                    </CardTitle>
-                  </CardBody>
-                </Card>
-              )}
-
-              {/* Current card (on top) */}
+          <div style={{ position: 'relative', width: '400px', height: '600px' }}>
+            
+            {/* Next cat card (underneath) */}
+            {nextCat && (
               <Card
-                ref={cardRef}
                 className="w-full shadow-md select-none"
                 style={{ 
                   position: 'absolute',
@@ -355,24 +348,18 @@ function App() {
                   maxHeight: '100vh',
                   width: '400px',
                   height: '600px',
-                  ...getCardStyle(),
+                  ...getCardStyle(true),
                   userSelect: 'none',
                   WebkitUserSelect: 'none',
                   MozUserSelect: 'none',
-                  msUserSelect: 'none'
+                  msUserSelect: 'none',
+                  pointerEvents: 'none'
                 }}
-                onMouseDown={handleStart}
-                onMouseMove={handleMove}
-                onMouseUp={handleEnd}
-                onMouseLeave={handleMouseLeave}
-                onTouchStart={handleStart}
-                onTouchMove={handleMove}
-                onTouchEnd={handleEnd}
               >
                 <CardImg
                   top
-                  src={currentCat.url}
-                  alt={currentCat.name}
+                  src={nextCat.url}
+                  alt={nextCat.name}
                   className="w-full object-cover rounded-t"
                   draggable={false}
                   style={{ 
@@ -385,36 +372,90 @@ function App() {
                 />
                 <CardBody className="p-4">
                   <CardTitle tag="h5" className="font-semibold text-sm text-center">
-                    {currentCat.name}
+                    {nextCat.name}
                   </CardTitle>
                 </CardBody>
-                
-                {/* Overlay for visual feedback */}
-                <div style={getOverlayStyle()}>
-                  {dragOffset.x > 0 ? '❤️' : '💔'}
-                </div>
               </Card>
+            )}
 
-              {/* Loading indicator for fetching more cats */}
-              {fetchingMore && (
+            {/* Current cat card (on top) */}
+            <Card
+              ref={cardRef}
+              className={`w-full shadow-md select-none ${loading ? 'opacity-75' : ''}`}
+              style={{ 
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                maxWidth: '50vw',
+                maxHeight: '100vh',
+                width: '400px',
+                height: '600px',
+                ...getCardStyle(),
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                msUserSelect: 'none',
+                pointerEvents: loading ? 'none' : 'auto'
+              }}
+              onMouseDown={handleStart}
+              onMouseMove={handleMove}
+              onMouseUp={handleEnd}
+              onMouseLeave={handleMouseLeave}
+              onTouchStart={handleStart}
+              onTouchMove={handleMove}
+              onTouchEnd={handleEnd}
+            >
+              <CardImg
+                top
+                src={currentCat.url}
+                alt={currentCat.name}
+                className="w-full object-cover rounded-t"
+                draggable={false}
+                style={{ 
+                  height: 'calc(100% - 60px)', 
+                  maxHeight: 'calc(100vh - 100px)', 
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  pointerEvents: 'none'
+                }}
+              />
+              <CardBody className="p-4">
+                <CardTitle tag="h5" className="font-semibold text-sm text-center">
+                  {currentCat.name}
+                </CardTitle>
+              </CardBody>
+              
+              {/* Overlay for visual feedback */}
+              <div style={getOverlayStyle()}>
+                {dragOffset.x > 0 ? '❤️' : '💔'}
+              </div>
+
+              {/* Loading overlay */}
+              {loading && (
                 <div style={{
                   position: 'absolute',
-                  bottom: '-50px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px'
+                  justifyContent: 'center',
+                  zIndex: 5,
+                  borderRadius: '0.375rem'
                 }}>
-                  <div className="spinner-border spinner-border-sm text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                  <div className="text-center">
+                    <div className="spinner-border text-primary mb-2" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <div>Loading next cat...</div>
                   </div>
-                  <span>Loading more cats...</span>
                 </div>
               )}
-            </div>
+            </Card>
           </div>
-        )}
+        </div>
       </div>
       
       </div>
