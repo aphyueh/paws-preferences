@@ -4,7 +4,7 @@ import "../assets/css/bootstrap.min.css";
 import "../assets/css/templatemo-tiya-golf-club.css";
 
 function HeroSection() {
-  const words = ["Modern", "Creative", "Lifestyle"];
+  const words = ["cute cats", "grumpy cats", "friendly cats", "playful cats"];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -40,11 +40,11 @@ function HeroSection() {
       <div className="container">
         <div className="row">
           {/* Text content */}
-          <div className="col-lg-6 col-12 mb-5 mb-lg-0">
-            <h2 className="text-white">Welcome to the club</h2>
+          <div className="col-lg-10 col-12 mb-5 mb-lg-0">
+            <h2 className="text-white">Welcome to the cats dating app!</h2>
 
             <h1 className="cd-headline rotate-1 text-white mb-4 pb-2">
-              <span>Tiya is </span>
+              <span>Enjoy connecting with </span>
               <span className="cd-words-wrapper">
                 {words.map((word, index) => (
                   <b
@@ -70,21 +70,6 @@ function HeroSection() {
               <a href="#section_3" className="link smoothscroll">
                 Become a member
               </a>
-            </div>
-          </div>
-
-          {/* Video iframe */}
-          <div className="col-lg-6 col-12">
-            <div className="ratio ratio-16x9">
-              <iframe
-                width="560"
-                height="315"
-                src="https://www.youtube.com/embed/MGNgbNGOzh8"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              ></iframe>
             </div>
           </div>
         </div>

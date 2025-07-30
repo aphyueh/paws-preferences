@@ -11,18 +11,14 @@ function Footer() {
         <div className="row">
           {/* Logo and brand */}
           <div className="col-lg-6 col-12 me-auto mb-5 mb-lg-0">
-            <a className="navbar-brand d-flex align-items-center" href="/">
-              <img
-                src={logo}
-                className="navbar-brand-image img-fluid"
-                alt="Tiya Golf Club"
-              />
+            <a className="navbar-brand d-flex align-items-center" href="https://github.com/aphyueh/paws-preferences">
+              <img src={logo} className="navbar-brand-image img-fluid" alt="Paws & Preferences" />
               <span className="navbar-brand-text">
-                Tiya
-                <small>Golf Club</small>
+                Paws<small>Preferences</small>
               </span>
             </a>
           </div>
+                    
 
           {/* Hours & copyright */}
           <div className="col-lg-3 col-12">

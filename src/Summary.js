@@ -22,7 +22,7 @@ function Summary({ likedCats = []}) {
     return (
       <div className="container">
         <h2 className="text-xl font-semibold">Let's review ...</h2>
-        <div className="col-lg-2 col-md-4 col-12 order-2 order-md-0 order-lg-0">
+        <div className="w-full flex justify-center mt-3">
           <div className="custom-block-date-wrap d-flex d-lg-block d-md-block align-items-center mt-3 mt-lg-0 mt-md-0">
             <h6 className="custom-block-date mb-lg-1 mb-0 me-3 me-lg-0 me-md-0">0</h6>
             <strong className="text-white">No cats caught your attention yet!</strong>
@@ -37,8 +37,8 @@ function Summary({ likedCats = []}) {
   return (
     <div class="container">
       <h2 className="text-xl font-semibold">Let's review ...</h2>
-        <div class="col-lg-2 col-md-4 col-12 order-2 order-md-0 order-lg-0">
-            <div class="custom-block-date-wrap d-flex d-lg-block d-md-block align-items-center mt-3 mt-lg-0 mt-md-0">
+        <div class="w-full flex justify-center mt-3">
+            <div class="custom-block-date-wrap d-flex d-lg-block d-md-block align-items-center mt-3 mt-lg-0 mt-md-0 mb-10">
                 <h6 class="custom-block-date mb-lg-1 mb-0 me-3 me-lg-0 me-md-0">{likedCats.length}</h6>
                 
                 <strong class="text-white">Cat(s) caught your attention!</strong>

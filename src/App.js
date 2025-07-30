@@ -16,6 +16,7 @@ function App() {
   const [swipeHistory, setSwipeHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [catCounter, setCatCounter] = useState(1);
+
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isHolding, setIsHolding] = useState(false);
@@ -24,42 +25,6 @@ function App() {
   const holdTimeoutRef = useRef(null);
   const startPosRef = useRef({ x: 0, y: 0 });
 
-  // Fetch a single cat
-  const fetchSingleCat = async (catNumber) => {
-    try {
-      const response = await fetch("https://cataas.com/cat/cute?json=true");
-      const cat = await response.json();
-      return {
-        url: `https://cataas.com/cat/${cat.id}`,
-        name: `Cat ${catNumber}`,
-        id: cat.id
-      };
-    } catch (error) {
-      console.error('Failed to fetch cat:', error);
-      return null;
-    }
-  };
-
-  // Load initial cats
-  useEffect(() => {
-    const loadInitialCats = async () => {
-      setLoading(true);
-      try {
-        const [current, next] = await Promise.all([
-          fetchSingleCat(1),
-          fetchSingleCat(2)
-        ]);
-        setCurrentCat(current);
-        setNextCat(next);
-        setCatCounter(3);
-      } catch (error) {
-        console.error('Failed to load initial cats:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadInitialCats();
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,6 +62,78 @@ function App() {
       });
     }
   };
+
+  const randomChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  // Fetch a single cat
+  const fetchSingleCat = async (catNumber) => {
+    const catNames = [
+      "Whiskers", "Mochi", "Luna", "Simba", "Neko", "Mittens",
+      "Shadow", "Oreo", "Pumpkin", "Miso", "Tuna", "Cleo", "Chai"
+    ];
+    const genders = ["Male", "Female"];
+    const interests = [
+      "Climbing curtains",
+      "Chasing laser pointers",
+      "Knocking things off shelves",
+      "Bird watching",
+      "Sleeping in boxes",
+      "Hunting socks",
+      "Sunbathing",
+      "Playing with yarn",
+      "Zooming at 3AM",
+      "Eating tuna"
+    ];
+
+    const bios = [
+      "A curious cat who loves adventure.",
+      "Professional napper and full-time floof.",
+      "Purring therapist available 24/7.",
+      "Came for the snacks, stayed for the cuddles.",
+      "Likes long walks on the windowsill.",
+      "Fierce, fabulous, and a little bit feral.",
+      "Pawsitively charming and dangerously cute.",
+      "Your future best friend with whiskers."
+    ];
+
+    try {
+      const response = await fetch("https://cataas.com/cat/cute?json=true");
+      const cat = await response.json();
+      return {
+        url: `https://cataas.com/cat/${cat.id}`,
+        name: randomChoice(catNames),
+        bio: randomChoice(bios),
+        interest: randomChoice(interests),
+        gender: randomChoice(genders),
+        id: cat.id
+      };
+    } catch (error) {
+      console.error('Failed to fetch cat:', error);
+      return null;
+    }
+  };
+
+  // Load initial cats
+  useEffect(() => {
+    const loadInitialCats = async () => {
+      setLoading(true);
+      try {
+        const [current, next] = await Promise.all([
+          fetchSingleCat(1),
+          fetchSingleCat(2)
+        ]);
+        setCurrentCat(current);
+        setNextCat(next);
+        setCatCounter(3);
+      } catch (error) {
+        console.error('Failed to load initial cats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadInitialCats();
+  }, []);
+
 const handleSwipe = async (direction) => {
     if (!currentCat || isSwipingAway) return;
     
@@ -110,8 +147,6 @@ const handleSwipe = async (direction) => {
     // Set swiping away state
     setIsSwipingAway(true);
     
-    // Start loading new cat immediately
-    setLoading(true);
     const newCat = await fetchSingleCat(catCounter + 1);
     
     // Wait for swipe animation to complete
@@ -127,7 +162,7 @@ const handleSwipe = async (direction) => {
       setIsHolding(false);
       setIsSwipingAway(false);
       setLoading(false);
-    }, 300);
+    }, 200);
   };
 
   // Handle mouse/touch start
@@ -203,36 +238,11 @@ const handleSwipe = async (direction) => {
     trackMouse: true,
   });
 
-
-  // useEffect(() => {
-  //   const fetchCats = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const results = await Promise.all(
-  //         Array.from({ length: 10 }).map(() =>
-  //           fetch("https://cataas.com/cat/cute?json=true").then((res) => res.json())
-  //         )
-  //       );
-  //       setCats(
-  //         results.map((cat, i) => ({
-  //           url: `https://cataas.com/cat/${cat.id}`,
-  //           name: `Cat ${i + 1}`, 
-  //         }))
-  //       );
-  //     } catch (error) {
-  //       console.error('Failed to fetch cats:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchCats();
-  // }, []);
-  // Calculate card transform and styling
   const getCardStyle = (isNext = false) => {
     if (isNext) {
       return {
-        transform: 'scale(0.95)',
-        opacity: 0.8,
+        transform: isSwipingAway ? 'scale(1)' : 'scale(0.95)',
+        opacity: isSwipingAway ? 1 : 0.8,
         transition: 'all 0.3s ease-out',
         zIndex: 1,
       };
@@ -254,7 +264,7 @@ const handleSwipe = async (direction) => {
     return {
       transform: `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${rotation}deg)`,
       opacity: opacity,
-      transition: isDragging ? 'none' : 'all 0.3s ease-out',
+      transition: 'none',
       cursor: isHolding ? 'grabbing' : 'grab',
       zIndex: 3,
     };
@@ -280,7 +290,7 @@ const handleSwipe = async (direction) => {
     };
   };
 
-  if (loading && !currentCat) {
+   if (loading && !currentCat) {
     return (
       <div id="section_2" className="events-section section-bg section-padding"
            style={{ backgroundColor: "#F4F1DE" }}>
@@ -317,7 +327,7 @@ const handleSwipe = async (direction) => {
     <div >
       <NavbarWithSidebar
         scrollToSection={scrollToSection}
-      />
+      />  
       <div id="section_1">
         <HeroSection />
       </div>
@@ -330,55 +340,73 @@ const handleSwipe = async (direction) => {
             <h2><span>START</span> SWIPING</h2>
           </div>
 
-          <div class="col-lg-6 col-12 text-center mb-3 mb-lg-0">
+          <div class="col-12 text-center mb-3 mb-lg-0">
             <h4 class="mb-4 pb-lg-2">Hold and drag left to 💔, right to ❤️</h4>
           </div>
+
           <div {...handlers} className="d-flex justify-content-center align-items-center">
-          <div style={{ position: 'relative', width: '400px', height: '600px' }}>
-            
-            {/* Next cat card (underneath) */}
-            {nextCat && (
-              <Card
-                className="w-full shadow-md select-none"
-                style={{ 
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  maxWidth: '50vw',
-                  maxHeight: '100vh',
-                  width: '400px',
-                  height: '600px',
-                  ...getCardStyle(true),
-                  userSelect: 'none',
-                  WebkitUserSelect: 'none',
-                  MozUserSelect: 'none',
-                  msUserSelect: 'none',
-                  pointerEvents: 'none'
-                }}
-              >
+            <div style={{ position: 'relative', width: '400px', height: '600px' }}> 
+              {/* Next cat card (underneath) */}
+              {nextCat && nextCat.url && (
+                <Card
+                  className="w-full shadow-md select-none"
+                  style={{ 
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    maxWidth: '50vw',
+                    maxHeight: '100vh',
+                    width: '400px',
+                    height: '600px',
+                    ...getCardStyle(true),
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    msUserSelect: 'none',
+                    pointerEvents: 'none'
+                  }}
+                >
+              <div style={{ position: 'relative', height: '100%' }}>                
                 <CardImg
                   top
                   src={nextCat.url}
-                  alt={nextCat.name}
-                  className="w-full object-cover rounded-t"
+                  alt={nextCat.name || 'Cat'}
+                  className="w-full h-full object-cover rounded-t"
                   draggable={false}
                   style={{ 
-                    height: 'calc(100% - 60px)', 
-                    maxHeight: 'calc(100vh - 100px)', 
+                    height: '100%', 
+                    width: '100%',
+                    maxHeight: '100vh', 
                     userSelect: 'none',
                     WebkitUserSelect: 'none',
-                    pointerEvents: 'none'
+                    pointerEvents: 'none',
+                    objectFit: 'cover'
+
                   }}
                 />
-                <CardBody className="p-4">
-                  <CardTitle tag="h5" className="font-semibold text-sm text-center">
-                    {nextCat.name}
-                  </CardTitle>
-                </CardBody>
+                {/* Floating cat name */}
+                <div style={{
+                    position: 'absolute',
+                    bottom: '20px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '20px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    backdropFilter: 'blur(4px)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)'
+                  }}>
+                  {nextCat.name || 'Cat'}
+                  </div>
+                </div>
               </Card>
             )}
 
             {/* Current cat card (on top) */}
+            {currentCat && currentCat.url && (
             <Card
               ref={cardRef}
               className={`w-full shadow-md select-none ${loading ? 'opacity-75' : ''}`}
@@ -405,55 +433,47 @@ const handleSwipe = async (direction) => {
               onTouchMove={handleMove}
               onTouchEnd={handleEnd}
             >
-              <CardImg
-                top
-                src={currentCat.url}
-                alt={currentCat.name}
-                className="w-full object-cover rounded-t"
-                draggable={false}
-                style={{ 
-                  height: 'calc(100% - 60px)', 
-                  maxHeight: 'calc(100vh - 100px)', 
-                  userSelect: 'none',
-                  WebkitUserSelect: 'none',
-                  pointerEvents: 'none'
-                }}
-              />
-              <CardBody className="p-4">
-                <CardTitle tag="h5" className="font-semibold text-sm text-center">
-                  {currentCat.name}
-                </CardTitle>
-              </CardBody>
-              
-              {/* Overlay for visual feedback */}
-              <div style={getOverlayStyle()}>
-                {dragOffset.x > 0 ? '❤️' : '💔'}
-              </div>
-
-              {/* Loading overlay */}
-              {loading && (
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 5,
-                  borderRadius: '0.375rem'
-                }}>
-                  <div className="text-center">
-                    <div className="spinner-border text-primary mb-2" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <div>Loading next cat...</div>
+              <div style={{ position: 'relative', height: '100%' }}>  
+                <CardImg
+                  top
+                  src={currentCat.url}
+                  alt={currentCat.name}
+                  className="w-full object-cover rounded-t"
+                  draggable={false}
+                  style={{ 
+                    width: '100%',
+                    height: '100%', 
+                    maxHeight: '100vh', 
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    pointerEvents: 'none',
+                    objectFit: 'cover'
+                  }}
+                />
+                  {/* Floating cat name */}
+                  <div style={{
+                      position: 'absolute',
+                      bottom: '20px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      color: 'white',
+                      padding: '8px 16px',
+                      borderRadius: '20px',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      backdropFilter: 'blur(4px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)'
+                    }}>
+                    {currentCat.name}
                   </div>
+                {/* Overlay for visual feedback */}
+                <div style={getOverlayStyle()}>
+                  {dragOffset.x > 0 ? '❤️' : '💔'}
                 </div>
-              )}
+              </div>
             </Card>
+            )}
           </div>
         </div>
       </div>
@@ -473,9 +493,9 @@ const handleSwipe = async (direction) => {
         <Summary likedCats={liked} />
       </div>
 
-      <div class="container">
+      <div class="container mt-10 mb-5">
         <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4 text-center">Swipe History</h2>
+          <h2 className="text-xl font-semibold mt-5 mb-4 text-center">Swipe History</h2>
           {swipeHistory.length > 0 ? (
             <div className="table-responsive">
               <table className="table text-center">
@@ -521,7 +541,62 @@ const handleSwipe = async (direction) => {
           )}
         </div>
       </div>
-      <div id="section_4">
+      <div className="container mb-5">
+      <div className="col-lg-5 col-12 mx-auto" id="section_4">
+        <h4 className="mb-4 pb-lg-2">Please join us!</h4>
+        <form
+          action="#"
+          method="post"
+          className="custom-form membership-form shadow-lg"
+          role="form"
+        >
+          <h4 className="text-white mb-4">Become a member</h4>
+
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              name="full-name"
+              id="full-name"
+              className="form-control"
+              placeholder="Full Name"
+              required
+            />
+            <label htmlFor="full-name">Full Name</label>
+          </div>
+
+          <div className="form-floating mb-3">
+            <input
+              type="email"
+              name="email"
+              id="email"
+              pattern="[^ @]*@[^ @]*"
+              className="form-control"
+              placeholder="Email address"
+              required
+            />
+            <label htmlFor="email">Email address</label>
+          </div>
+
+          <div className="form-floating mb-3">
+            <textarea
+              className="form-control"
+              id="message"
+              name="message"
+              placeholder="Describe message here"
+            />
+            <label htmlFor="message">Comments</label>
+          </div>
+
+          <button type="submit" className="form-control">
+            Submit
+          </button>
+        </form>
+      </div>
+      </div>
+      
+      {/* Footer */}
+
+      <div id="section_5">
         <Footer />
       </div>
       

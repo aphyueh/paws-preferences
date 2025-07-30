@@ -27,7 +27,7 @@ function NavbarWithSidebar({ scrollToSection }) {
       <nav className="navbar navbar-expand-lg">
         <div className="container">
           {/* Logo / Brand */}
-          <a className="navbar-brand d-flex align-items-center" href="/">
+          <a className="navbar-brand d-flex align-items-center" href="https://github.com/aphyueh/paws-preferences">
             <img src={logo} className="navbar-brand-image img-fluid" alt="Paws & Preferences" />
             <span className="navbar-brand-text">
               Paws<small>Preferences</small>
@@ -71,7 +71,7 @@ function NavbarWithSidebar({ scrollToSection }) {
             </ul>
           </div>
           <div class="d-none d-lg-block ms-lg-3">
-              <a class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">Member Login</a>
+              <a class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" onClick={() => setIsSidebarOpen(true)}>Member Login</a>
           </div>
         </div>
       </nav>
