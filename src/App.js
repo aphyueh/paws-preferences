@@ -275,53 +275,28 @@ const handleSwipe = async (direction) => {
     if (!isDragging && !isSwipingAway) return { display: 'none' };
     
     const intensity = Math.min(Math.abs(dragOffset.x) / 100, 1);
+    const isLike = dragOffset.x > 0;
     
     return {
       position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      fontSize: `${2 + intensity * 2}rem`,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: isLike ? 'rgba(255, 0, 128, 0.48)' : 'rgba(10, 77, 10, 0.48)', // Bright pink for like, dark green for dislike
       opacity: intensity,
-      zIndex: 4,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '3rem',
+      color: 'white',
+      fontWeight: 'bold',
+      textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
       pointerEvents: 'none',
-      textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-      transition: isDragging ? 'none' : 'all 0.3s ease-out',
+      borderRadius: '0.375rem',
+     
     };
   };
-
-  //  if (loading && !currentCat) {
-  //   return (
-  //     <div id="section_2" className="events-section section-bg section-padding"
-  //          style={{ backgroundColor: "#F4F1DE" }}>
-  //       <div className="container" style={{ backgroundColor: "#F4F1DE" }}>
-  //         <div className="col-lg-12 col-12 text-center mx-auto mb-lg-5 mb-4">
-  //           <h2><span>LOADING</span> CATS</h2>
-  //         </div>
-  //         <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
-  //           <div className="spinner-border text-primary" role="status">
-  //             <span className="visually-hidden">Loading...</span>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
-  // if (!currentCat) {
-  //   return (
-  //     <div id="section_2" className="events-section section-bg section-padding"
-  //          style={{ backgroundColor: "#F4F1DE" }}>
-  //       <div className="container" style={{ backgroundColor: "#F4F1DE" }}>
-  //         <div className="col-lg-12 col-12 text-center mx-auto mb-lg-5 mb-4">
-  //           <h2><span>NO</span> CATS AVAILABLE</h2>
-  //         </div>
-  //         <p className="text-center mb-0">Unable to load cats 😿</p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
 
   return (
     <div >
@@ -332,17 +307,77 @@ const handleSwipe = async (direction) => {
         <HeroSection />
       </div>
 
-      <div id="section_2" class="events-section section-bg section-padding"
-        style={{ backgroundColor: "#F4F1DE" }}>
+      <div id="section_2" class="events-section section-bg section-padding" style={{ backgroundColor: "#F4F1DE" }}>
 
         <div className="container" style={{ backgroundColor: "#F4F1DE" }}>
+
           <div class="col-lg-12 col-12 text-center mx-auto mb-lg-5 mb-4">
-            <h2><span>START</span> SWIPING</h2>
+            <h2><span>START</span> PURRING</h2>
           </div>
 
           <div class="col-12 text-center mb-3 mb-lg-0">
-            <h4 class="mb-4 pb-lg-2">Hold and drag left to dislike, right to like</h4>
+            <h4 class="mb-4 pb-lg-2">Hold & swipe left to dislike, right to like the cats!</h4>
+            <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
+              {/* Animated paw prints - Left side */}
+              <div style={{
+                position: 'absolute',
+                left: 'calc(50% - 300px)',
+                top: '0',
+                height: '600px',
+                width: '80px',
+                pointerEvents: 'none',
+                zIndex: 1
+              }}>
+                {[...Array(8)].map((_, i) => (
+                  <div
+                    key={`left-${i}`}
+                    style={{
+                      position: 'absolute',
+                      fontSize: '36px',
+                      opacity: 0.3,
+                      animation: `pawWalkUp 6s infinite linear`,
+                      animationDelay: `${i * 0.8}s`,
+                      left: i % 2 === 0 ? '0px' : '40px',
+                      bottom: `-40px`,
+                      transform: 'rotate(-15deg)'
+                    }}
+                  >
+                    💔
+                  </div>
+                ))}
+              </div>
+
+              {/* Animated paw prints - Right side */}
+              <div style={{
+                position: 'absolute',
+                right: 'calc(50% - 300px)',
+                top: '0',
+                height: '600px',
+                width: '80px',
+                pointerEvents: 'none',
+                zIndex: 1
+              }}>
+                {[...Array(8)].map((_, i) => (
+                  <div
+                    key={`right-${i}`}
+                    style={{
+                      position: 'absolute',
+                      fontSize: '36px',
+                      opacity: 0.3,
+                      animation: `pawWalkUp 6s infinite linear`,
+                      animationDelay: `${i * 0.8}s`,
+                      left: i % 2 === 0 ? '40px' : '0px',
+                      bottom: `-40px`,
+                      transform: 'rotate(15deg)'
+                    }}
+                  >
+                    ❤️
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
+
 
           <div {...handlers} className="d-flex justify-content-center align-items-center">
             <div style={{ position: 'relative', width: '400px', height: '600px' }}> 
@@ -475,7 +510,25 @@ const handleSwipe = async (direction) => {
           </div>
         </div>
       </div>
-      
+      {/* CSS Animation Styles */}
+        <style jsx>{`
+          @keyframes pawWalkUp {
+            0% {
+              bottom: -40px;
+              opacity: 0;
+            }
+            10% {
+              opacity: 0.3;
+            }
+            90% {
+              opacity: 0.3;
+            }
+            100% {
+              bottom: calc(100% + 40px);
+              opacity: 0;
+            }
+          }
+        `}</style>
       </div>
 
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
@@ -538,6 +591,7 @@ const handleSwipe = async (direction) => {
             <p className="text-center text-gray-500">No cats swiped yet! Start swiping to see your history.</p>
           )}
         </div>
+       
       </div>
       <div className="container mb-5">
       <div className="col-lg-5 col-12 mx-auto" id="section_4">
