@@ -290,37 +290,37 @@ const handleSwipe = async (direction) => {
     };
   };
 
-   if (loading && !currentCat) {
-    return (
-      <div id="section_2" className="events-section section-bg section-padding"
-           style={{ backgroundColor: "#F4F1DE" }}>
-        <div className="container" style={{ backgroundColor: "#F4F1DE" }}>
-          <div className="col-lg-12 col-12 text-center mx-auto mb-lg-5 mb-4">
-            <h2><span>LOADING</span> CATS</h2>
-          </div>
-          <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  //  if (loading && !currentCat) {
+  //   return (
+  //     <div id="section_2" className="events-section section-bg section-padding"
+  //          style={{ backgroundColor: "#F4F1DE" }}>
+  //       <div className="container" style={{ backgroundColor: "#F4F1DE" }}>
+  //         <div className="col-lg-12 col-12 text-center mx-auto mb-lg-5 mb-4">
+  //           <h2><span>LOADING</span> CATS</h2>
+  //         </div>
+  //         <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
+  //           <div className="spinner-border text-primary" role="status">
+  //             <span className="visually-hidden">Loading...</span>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (!currentCat) {
-    return (
-      <div id="section_2" className="events-section section-bg section-padding"
-           style={{ backgroundColor: "#F4F1DE" }}>
-        <div className="container" style={{ backgroundColor: "#F4F1DE" }}>
-          <div className="col-lg-12 col-12 text-center mx-auto mb-lg-5 mb-4">
-            <h2><span>NO</span> CATS AVAILABLE</h2>
-          </div>
-          <p className="text-center mb-0">Unable to load cats 😿</p>
-        </div>
-      </div>
-    );
-  }
+  // if (!currentCat) {
+  //   return (
+  //     <div id="section_2" className="events-section section-bg section-padding"
+  //          style={{ backgroundColor: "#F4F1DE" }}>
+  //       <div className="container" style={{ backgroundColor: "#F4F1DE" }}>
+  //         <div className="col-lg-12 col-12 text-center mx-auto mb-lg-5 mb-4">
+  //           <h2><span>NO</span> CATS AVAILABLE</h2>
+  //         </div>
+  //         <p className="text-center mb-0">Unable to load cats 😿</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
 
   return (
@@ -341,7 +341,7 @@ const handleSwipe = async (direction) => {
           </div>
 
           <div class="col-12 text-center mb-3 mb-lg-0">
-            <h4 class="mb-4 pb-lg-2">Hold and drag left to 💔, right to ❤️</h4>
+            <h4 class="mb-4 pb-lg-2">Hold and drag left to dislike, right to like</h4>
           </div>
 
           <div {...handlers} className="d-flex justify-content-center align-items-center">

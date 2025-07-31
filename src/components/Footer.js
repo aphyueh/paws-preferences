@@ -35,8 +35,11 @@ function Footer() {
             </p>
 
             <br />
-            <p className="copyright-text">
-              Copyright © 2048 Tiya Golf Club
+            <p className="">
+              Copyright © 2025 Amber Pang 
+            </p>
+            <p className="tiny-text">
+              inspired by Tiya Golf Club
             </p>
           </div>
 
@@ -54,16 +57,12 @@ function Footer() {
               </li>
             </ul>
             <p className="copyright-text">
-              Design:{" "}
-              <a
-                rel="nofollow"
-                href="https://templatemo.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                TemplateMo
-              </a>
+              Designed by Amber Pang
             </p>
+            <p className="tiny-text">
+              with templatemo
+            </p>
+            
           </div>
         </div>
       </div>
