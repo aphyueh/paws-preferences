@@ -22,16 +22,16 @@ function Footer() {
 
           {/* Hours & copyright */}
           <div className="col-lg-3 col-12">
-            <h5 className="site-footer-title mb-4">Join Us</h5>
+            <h5 className="site-footer-title mb-4">Official Meet Up Sessions</h5>
 
             <p className="d-flex border-bottom pb-3 mb-3 me-lg-3">
-              <span>Mon-Fri</span>
-              6:00 AM - 6:00 PM
+              <span>Wed-Fri</span>
+              6:00 PM - 8:00 PM
             </p>
 
             <p className="d-flex me-lg-3">
               <span>Sat-Sun</span>
-              6:30 AM - 8:30 PM
+              6:30 AM - 9:30 AM
             </p>
 
             <br />

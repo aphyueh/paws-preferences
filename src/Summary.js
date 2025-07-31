@@ -83,70 +83,73 @@ function Summary({ likedCats = []}) {
           </>
         )}
 
-        {/* Current Cat Display */}
-        <div className="col-lg-4 col-md-8 col-12 order-1 order-lg-0">
-          <div className="custom-block-image-wrap">
-            <img 
-              src={currentCat.url} 
-              className="custom-block-image img-fluid" 
-              alt={currentCat.name || 'Cat'}
-              style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-            />
-          </div>
-        </div>
-
-        <div className="col-lg-6 col-12 order-3 order-lg-0">
-          <div className="custom-block-info mt-2 mt-lg-0">
-            <h3 className="mb-3 font-semibold">{currentCat.name || 'Adorable Cat'}</h3>
-            
-            <p className="mb-0">{currentCat.bio || 'A wonderful feline companion looking for love and attention.'}</p>
-
-            <div className="d-flex flex-wrap border-top mt-4 pt-3">
-              <div className="mb-4 mb-lg-0">
-                <div className="d-flex flex-wrap align-items-center mb-1">
-                  <span className="custom-block-span">Interest:</span>
-                  <p className="mb-0">{currentCat.interest || 'Playing, napping, and getting treats'}</p>
-                </div>
-
-                <div className="d-flex flex-wrap align-items-center">
-                  <span className="custom-block-span">Gender:</span>
-                  <p className="mb-0">{currentCat.gender || 'Unknown'}</p>
-                </div>
-              </div>
-
-              <div className="d-flex align-items-center ms-lg-auto">
-                <a href="event-detail.html" className="btn custom-btn">Say meow</a>
-              </div>
+        <div className="row align-items-start">
+          {/* Current Cat Display */}
+          <div className="col-lg-4 col-md-8 col-12 order-1 order-lg-0">
+            <div className="custom-block-image-wrap">
+              <img 
+                src={currentCat.url} 
+                className="custom-block-image img-fluid" 
+                alt={currentCat.name || 'Cat'}
+                style={{ width: '100%', height: '300px', objectFit: 'cover' }}
+              />
             </div>
+          </div>
 
-            {/* Gallery Indicator */}
-            {likedCats.length > 1 && (
-              <div className="text-center mt-3">
-                <small className="text-muted">
-                  {currentIndex + 1} of {likedCats.length}
-                </small>
-                <div className="d-flex justify-content-center mt-2 gap-2">
-                  {likedCats.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentIndex(index)}
-                      className={`rounded-circle border-0 ${
-                        index === currentIndex ? 'bg-primary' : 'bg-secondary'
-                      }`}
-                      style={{ 
-                        width: '8px', 
-                        height: '8px',
-                        opacity: index === currentIndex ? 1 : 0.5
-                      }}
-                      aria-label={`Go to cat ${index + 1}`}
-                    />
-                  ))}
+          <div className="col-lg-8 col-12 order-3 order-lg-0">
+            <div className="custom-block-info mt-2 mt-lg-0">
+              <h3 className="mb-3 font-semibold">{currentCat.name || 'Adorable Cat'}</h3>
+              
+              <p className="mb-0">{currentCat.bio || 'A wonderful feline companion looking for love and attention.'}</p>
+
+              <div className="d-flex flex-wrap border-top mt-4 pt-3">
+                <div className="mb-4 mb-lg-0">
+                  <div className="d-flex flex-wrap align-items-center mb-1">
+                    <span className="custom-block-span">Interest:</span>
+                    <p className="mb-0">{currentCat.interest || 'Playing, napping, and getting treats'}</p>
+                  </div>
+
+                  <div className="d-flex flex-wrap align-items-center">
+                    <span className="custom-block-span">Gender:</span>
+                    <p className="mb-0">{currentCat.gender || 'Unknown'}</p>
+                  </div>
+                </div>
+
+                <div className="d-flex align-items-center ms-lg-auto">
+                  <a href="event-detail.html" className="btn custom-btn">Say meow</a>
                 </div>
               </div>
-            )}
+
+              {/* Gallery Indicator */}
+              {likedCats.length > 1 && (
+                <div className="text-center mt-3">
+                  <small className="text-muted">
+                    {currentIndex + 1} of {likedCats.length}
+                  </small>
+                  <div className="d-flex justify-content-center mt-2 gap-2">
+                    {likedCats.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentIndex(index)}
+                        className={`rounded-circle border-0 ${
+                          index === currentIndex ? 'bg-primary' : 'bg-secondary'
+                        }`}
+                        style={{ 
+                          width: '8px', 
+                          height: '8px',
+                          opacity: index === currentIndex ? 1 : 0.5
+                        }}
+                        aria-label={`Go to cat ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+        </div>
+        
     </div>
   );
 }
