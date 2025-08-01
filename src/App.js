@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
-import { Card, CardImg, CardBody, CardTitle } from "reactstrap";
+import { Card, CardImg } from "reactstrap";
 import Footer from "./components/Footer";
 import HeroSection from "./components/HeroSection";
 import NavbarWithSidebar from "./components/Navbar";
@@ -8,8 +8,6 @@ import Summary from "./Summary";
 import "./assets/css/bootstrap-icons.css";
 import "./assets/css/bootstrap.min.css";
 import "./assets/css/templatemo-tiya-golf-club.css";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./components/FirebaseConfig";
 import SignUpForm from "./components/SignUp";
 
 
@@ -28,8 +26,9 @@ function App() {
   const cardRef = useRef(null);
   const holdTimeoutRef = useRef(null);
   const startPosRef = useRef({ x: 0, y: 0 });
-  
-  
+
+  const randomChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
   useEffect(() => {
     const handleScroll = () => {
       const sections = ["section_1", "section_2", "section_3", "section_4"];
@@ -67,9 +66,6 @@ function App() {
     }
   };
   
-  const randomChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-  // Fetch a single cat
   const fetchSingleCat = async (catNumber) => {
     const catNames = [
       "Whiskers", "Mochi", "Luna", "Simba", "Neko", "Mittens",
@@ -599,60 +595,9 @@ const handleSwipe = async (direction) => {
       </div>
       <div className="container mb-5">
         <SignUpForm />
-        {/* <div className="col-lg-5 col-12 mx-auto" id="section_4">
-          <h4 className="mb-4 pb-lg-2">Please join us!</h4>
-          <form
-            action="#"
-            method="post"
-            className="custom-form membership-form shadow-lg"
-            role="form"
-          >
-            <h4 className="text-white mb-4">Become a member</h4>
-
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                name="full-name"
-                id="full-name"
-                className="form-control"
-                placeholder="Full Name"
-                required
-              />
-              <label htmlFor="full-name">Full Name</label>
-            </div>
-
-            <div className="form-floating mb-3">
-              <input
-                type="email"
-                name="email"
-                id="email"
-                pattern="[^ @]*@[^ @]*"
-                className="form-control"
-                placeholder="Email address"
-                required
-              />
-              <label htmlFor="email">Email address</label>
-            </div>
-
-            <div className="form-floating mb-3">
-              <textarea
-                className="form-control"
-                id="message"
-                name="message"
-                placeholder="Describe message here"
-              />
-              <label htmlFor="message">Comments</label>
-            </div>
-
-            <button type="submit" className="form-control">
-              Submit
-            </button>
-          </form>
-        </div> */}
       </div>
       
       {/* Footer */}
-
       <div id="section_5">
         <Footer />
       </div>

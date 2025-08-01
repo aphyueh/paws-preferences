@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/images/paw-print-bold-svgrepo-com.svg"; // Adjust the path based on your folder structure
+import logo from "../assets/images/paw-print-bold-svgrepo-com.svg"; 
 import "../assets/css/bootstrap-icons.css";
 import "../assets/css/bootstrap.min.css";
 import "../assets/css/templatemo-tiya-golf-club.css";
@@ -35,10 +35,10 @@ function Footer() {
             </p>
 
             <br />
-            <p className="">
+            <p className="mb-0">
               Copyright © 2025 Amber Pang 
             </p>
-            <p className="tiny-text">
+            <p className="tiny-text mb-10">
               inspired by Tiya Golf Club
             </p>
           </div>
@@ -56,10 +56,10 @@ function Footer() {
                 <a href="#" className="social-icon-link bi-whatsapp" />
               </li>
             </ul>
-            <p className="copyright-text">
+            <p className="copyright-text mb-0">
               Designed by Amber Pang
             </p>
-            <p className="tiny-text">
+            <p className="tiny-text mb-10">
               with templatemo
             </p>
             

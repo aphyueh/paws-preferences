@@ -15,7 +15,7 @@ function HeroSection() {
       setTimeout(() => {
         setCurrentWordIndex((prev) => (prev + 1) % words.length);
         setIsAnimating(false);
-      }, 600); // match with CSS animation duration
+      }, 600); 
     }, 2500);
 
     return () => clearInterval(animationInterval);
