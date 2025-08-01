@@ -1,28 +1,36 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword , updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "./FirebaseConfig";
 
 export default function SignUpForm() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleSignup = async (email, password, displayName) => {
+  const handleSignup = async (e) => {
+    e.preventDefault(); 
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // ✅ Set display name AFTER user creation
       await updateProfile(user, {
-        displayName: displayName
+        displayName: fullName
       });
 
-      alert(`Signup successful! Welcome, ${user.displayName}`);
-    } catch (error) {
-      console.error("Signup error:", error.message);
-      alert("Signup failed: " + error.message);
+      setSuccess(`Signup successful! Welcome, ${fullName}`);
+      setError("");
+      setFullName("");
+      setEmail("");
+      setPassword("");
+      setMessage("");
+    } catch (err) {
+      console.error("Signup error:", err.message);
+      setError("Signup failed: " + err.message);
+      setSuccess("");
     }
   };
 
@@ -30,11 +38,7 @@ export default function SignUpForm() {
     <div className="col-lg-5 col-12 mx-auto" id="section_4">
       <h4 className="mb-4 pb-lg-2">Please join us!</h4>
 
-      <form
-        onSubmit={handleSignup}
-        className="custom-form membership-form shadow-lg"
-        role="form"
-      >
+      <form onSubmit={handleSignup} className="custom-form membership-form shadow-lg" role="form">
         <h4 className="text-white mb-4">Become a member</h4>
 
         {error && <div className="alert alert-danger">{error}</div>}
@@ -66,6 +70,20 @@ export default function SignUpForm() {
             onChange={(e) => setEmail(e.target.value)}
           />
           <label htmlFor="email">Email address</label>
+        </div>
+
+        <div className="form-floating mb-3">
+          <input
+            type="password"
+            name="password"
+            id="password"
+            className="form-control"
+            placeholder="Password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <label htmlFor="password">Password</label>
         </div>
 
         <div className="form-floating mb-3">
