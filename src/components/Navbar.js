@@ -4,7 +4,7 @@ import "../assets/css/bootstrap.min.css";
 import "../assets/css/templatemo-tiya-golf-club.css";
 import "../assets/css/NavbarWithSidebar.css";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./FirebaseConfig"; 
+import { auth } from "../FirebaseConfig"; 
 
 function NavbarWithSidebar({ scrollToSection }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

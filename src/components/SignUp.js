@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "./FirebaseConfig";
+import { auth } from "../FirebaseConfig";
 
 export default function SignUpForm() {
   const [fullName, setFullName] = useState("");
