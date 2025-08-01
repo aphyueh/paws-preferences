@@ -2,12 +2,30 @@ import React, { useState , useEffect} from "react";
 import logo from "../assets/images/paw-print-bold-svgrepo-com.svg";
 import "../assets/css/bootstrap.min.css";
 import "../assets/css/templatemo-tiya-golf-club.css";
-import "../assets/css/NavbarWithSidebar.css"; // for custom sidebar CSS
+import "../assets/css/NavbarWithSidebar.css";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./FirebaseConfig"; 
 
 function NavbarWithSidebar({ scrollToSection }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Login successful!");
+      setIsSidebarOpen(false);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,6 +36,7 @@ function NavbarWithSidebar({ scrollToSection }) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
 
   return (
     <>
@@ -75,7 +94,6 @@ function NavbarWithSidebar({ scrollToSection }) {
           </div>
         </div>
       </nav>
-
       {/* Sidebar */}
       <div className={`sidebar-wrapper ${isSidebarOpen ? "open" : ""}`}>
         <div className="custom-sidebar">
@@ -85,15 +103,17 @@ function NavbarWithSidebar({ scrollToSection }) {
             </button>
           </div>
           <div className="sidebar-body d-flex flex-column">
-            <form className="custom-form member-login-form" action="#" method="post">
+            <form className="custom-form member-login-form" onSubmit={handleLogin}>
               <div className="mb-4">
-                <label className="form-label mb-2" htmlFor="member-login-number">Membership No.</label>
+                <label className="form-label mb-2" htmlFor="member-login-number">Email</label>
                 <input
                   type="text"
-                  name="member-login-number"
-                  id="member-login-number"
+                  name="member-login-email"
+                  id="member-login-email"
                   className="form-control"
-                  placeholder="11002560"
+                  placeholder="user@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -106,6 +126,8 @@ function NavbarWithSidebar({ scrollToSection }) {
                   id="member-login-password"
                   className="form-control"
                   placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
@@ -119,6 +141,10 @@ function NavbarWithSidebar({ scrollToSection }) {
                 <button type="submit" className="form-control">Login</button>
               </div>
 
+              {error && (
+                <div className="alert alert-danger" role="alert">{error}</div>
+              )}
+
               <div className="text-center mb-4">
                 <a href="#">Forgotten password?</a>
               </div>
@@ -127,7 +153,7 @@ function NavbarWithSidebar({ scrollToSection }) {
             <div className="mt-auto mb-5">
               <p>
                 <strong className="text-white me-3">Any Questions?</strong>
-                <a href="tel:010-020-0340" className="contact-link">010-020-0340</a>
+                <a href="https://github.com/aphyueh/paws-preferences/tree/gh-pages" className="xx-small">Check out Github page</a>
               </p>
             </div>
           </div>

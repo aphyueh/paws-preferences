@@ -8,6 +8,10 @@ import Summary from "./Summary";
 import "./assets/css/bootstrap-icons.css";
 import "./assets/css/bootstrap.min.css";
 import "./assets/css/templatemo-tiya-golf-club.css";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./components/FirebaseConfig";
+import SignUpForm from "./components/SignUp";
+
 
 function App() {
   const [currentCat, setCurrentCat] = useState(null);
@@ -16,7 +20,7 @@ function App() {
   const [swipeHistory, setSwipeHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [catCounter, setCatCounter] = useState(1);
-
+  
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isHolding, setIsHolding] = useState(false);
@@ -24,22 +28,22 @@ function App() {
   const cardRef = useRef(null);
   const holdTimeoutRef = useRef(null);
   const startPosRef = useRef({ x: 0, y: 0 });
-
-
+  
+  
   useEffect(() => {
     const handleScroll = () => {
       const sections = ["section_1", "section_2", "section_3", "section_4"];
       const scrollPosition = window.scrollY + 95;
-
+      
       sections.forEach((id, index) => {
         const section = document.getElementById(id);
         if (section) {
           const offsetTop = section.offsetTop;
           const nextOffsetTop =
-            index + 1 < sections.length
-              ? document.getElementById(sections[index + 1])?.offsetTop || Infinity
-              : Infinity;
-
+          index + 1 < sections.length
+          ? document.getElementById(sections[index + 1])?.offsetTop || Infinity
+          : Infinity;
+          
           const navLinks = document.querySelectorAll(".click-scroll");
           if (scrollPosition >= offsetTop && scrollPosition < nextOffsetTop) {
             navLinks.forEach((link) => link.classList.remove("active"));
@@ -48,11 +52,11 @@ function App() {
         }
       });
     };
-
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
+  
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
     if (section) {
@@ -62,7 +66,7 @@ function App() {
       });
     }
   };
-
+  
   const randomChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   // Fetch a single cat
@@ -594,56 +598,57 @@ const handleSwipe = async (direction) => {
        
       </div>
       <div className="container mb-5">
-      <div className="col-lg-5 col-12 mx-auto" id="section_4">
-        <h4 className="mb-4 pb-lg-2">Please join us!</h4>
-        <form
-          action="#"
-          method="post"
-          className="custom-form membership-form shadow-lg"
-          role="form"
-        >
-          <h4 className="text-white mb-4">Become a member</h4>
+        <SignUpForm />
+        {/* <div className="col-lg-5 col-12 mx-auto" id="section_4">
+          <h4 className="mb-4 pb-lg-2">Please join us!</h4>
+          <form
+            action="#"
+            method="post"
+            className="custom-form membership-form shadow-lg"
+            role="form"
+          >
+            <h4 className="text-white mb-4">Become a member</h4>
 
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              name="full-name"
-              id="full-name"
-              className="form-control"
-              placeholder="Full Name"
-              required
-            />
-            <label htmlFor="full-name">Full Name</label>
-          </div>
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="full-name"
+                id="full-name"
+                className="form-control"
+                placeholder="Full Name"
+                required
+              />
+              <label htmlFor="full-name">Full Name</label>
+            </div>
 
-          <div className="form-floating mb-3">
-            <input
-              type="email"
-              name="email"
-              id="email"
-              pattern="[^ @]*@[^ @]*"
-              className="form-control"
-              placeholder="Email address"
-              required
-            />
-            <label htmlFor="email">Email address</label>
-          </div>
+            <div className="form-floating mb-3">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                pattern="[^ @]*@[^ @]*"
+                className="form-control"
+                placeholder="Email address"
+                required
+              />
+              <label htmlFor="email">Email address</label>
+            </div>
 
-          <div className="form-floating mb-3">
-            <textarea
-              className="form-control"
-              id="message"
-              name="message"
-              placeholder="Describe message here"
-            />
-            <label htmlFor="message">Comments</label>
-          </div>
+            <div className="form-floating mb-3">
+              <textarea
+                className="form-control"
+                id="message"
+                name="message"
+                placeholder="Describe message here"
+              />
+              <label htmlFor="message">Comments</label>
+            </div>
 
-          <button type="submit" className="form-control">
-            Submit
-          </button>
-        </form>
-      </div>
+            <button type="submit" className="form-control">
+              Submit
+            </button>
+          </form>
+        </div> */}
       </div>
       
       {/* Footer */}
