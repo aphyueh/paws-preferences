@@ -58,7 +58,7 @@ function NavbarWithSidebar({ scrollToSection }) {
             
             {/* Member Login */}
              <div class="d-lg-none ms-auto me-3">
-                <button class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"  onClick={() => setIsSidebarOpen(true)}>Member Login</button>
+                <button class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" role="button" onClick={() => setIsSidebarOpen(true)}>Member Login</button>
             </div>
     
             {/* Hamburger toggle (mobile only) */}
@@ -90,7 +90,7 @@ function NavbarWithSidebar({ scrollToSection }) {
             </ul>
           </div>
           <div class="d-none d-lg-block ms-lg-3">
-              <a class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" onClick={() => setIsSidebarOpen(true)}>Member Login</a>
+              <a class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" role="button" onClick={() => setIsSidebarOpen(true)}>Member Login</a>
           </div>
         </div>
       </nav>
