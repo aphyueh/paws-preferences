@@ -35,7 +35,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="col-lg-5 col-12 mx-auto" id="section_4">
+    <div className="col-lg-10 col-12 mx-auto" id="section_4">
       <h4 className="mb-4 pb-lg-2">Please join us!</h4>
 
       <form onSubmit={handleSignup} className="custom-form membership-form shadow-lg" role="form">

@@ -116,7 +116,7 @@ function Summary({ likedCats = []}) {
                 </div>
 
                 <div className="d-flex align-items-center ms-lg-auto">
-                  <a href="event-detail.html" className="btn custom-btn">Say meow</a>
+                  <a href="" className="btn custom-btn">Say meow</a>
                 </div>
               </div>
 
