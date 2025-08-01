@@ -1,70 +1,96 @@
-# Getting Started with Create React App
+# Paws Preferences 🐾
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Find your purrfect companion with a swipe!**
 
-## Available Scripts
+Paws Preferences is a delightful single-page web application inspired by the popular dating app concept, but with a feline twist. Instead of people, you get to swipe through adorable cat profiles, liking or disliking them to find your ideal furry friend. This project is built with React and leverages Firebase for basic user authentication.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+*   **Navbar with Sidebar:** Easy navigation to all sections of the app.
+*   **Hero Section:** A welcoming introduction to the world of Paws Preferences.
+*   **Interactive Swiping:** Swipe right to "like" and left to "dislike" cats. The intuitive interface makes finding your favorite felines fun and engaging.
+*   **Liked Cats Summary:** A dedicated section to review all the cats you've liked, making it easy to keep track of your potential companions.
+*   **Swipe History:** A comprehensive log of all your swipes, so you never lose track of the cats you've seen.
+*   **User Authentication:** A basic sign-up and login system powered by Firebase to get you started on your cat-swiping journey.
+*   **Footer:** Containing additional links and information.
+<br>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<img src="./public/img/paws-hero.png" width="200">
+<img src="./public/img/paws-swipe.png" width="200">
+<img src="./public/img/paws-summary.png" width="200">
+<img src="./public/img/paws-history.png" width="200">
+<img src="./public/img/paws-signup.png" width="200">
+<img src="./public/img/paws-footer.png" width="200">
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Project Structure
+```plaintext
+paws-preferences/
+├── package.json       # Lists project dependencies and scripts
+├── package-lock.json  # Records the exact version of each installed package
+├── README.md          # Project documentation
+├── public/
+│   ├── index.html     # HTML file for the React application
+│   └── ...            # Other static assets like favicons and manifest.json
+│
+└── src/
+    ├── assets/
+    │   ├── css/             # Stylesheets for the application
+    │   ├── fonts/           # Font files used in the project
+    │   └── images/          # Image assets for the application
+    │
+    ├── components/
+    │   ├── FirebaseConfig.js  # Firebase configuration and initialization
+    │   ├── Footer.js          # Footer component for the page
+    │   ├── HeroSection.js     # Top hero/welcome section component
+    │   ├── Navbar.js          # Navigation bar and sidebar component
+    │   ├── SignUp.js          # User sign-up form component
+    │   └── Summary.js         # Review section to display liked cats
+    │
+    ├── App.js                 # Main application component that assembles all other components
+    ├── App.test.js            # Test file for the main App component
+    ├── FirebaseTest.js        # A component for testing Firebase functionality
+    ├── bootstrap.bundle.min.js# Bootstrap JavaScript bundle
+    ├── index.js               # The entry point for the React application
+    ├── reportWebVitals.js     # Measures and reports on web performance metrics
+    ├── setupTests.js          # Setup file for running tests
+    └── ...                    # Other miscellaneous files like SVGs
+```
+## Getting Started
 
-### `npm test`
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+You will need to have Node.js and npm installed on your machine.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1.  **Clone the repository:**
+    ```sh
+    git clone https://github.com/aphyueh/paws-preferences.git
+    ```
+2.  **Navigate to the project directory:**
+    ```sh
+    cd paws-preferences
+    ```
+3.  **Install the dependencies:**
+    ```sh
+    npm install
+    ```
+4.  **Start the development server:**
+    ```sh
+    npm start
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The application will be running on `http://localhost:3000`.
 
-### `npm run eject`
+## Built With
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+*   [React](https://reactjs.org/) - A JavaScript library for building user interfaces.
+*   [Firebase](https://firebase.google.com/) - Used for user authentication.
+*   [Cat as a Service](https://cataas.com/) - API for cat images
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Acknowledgements
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+*   Inspired by [Tiya Golf Club](https://templatemo.com/tm-587-tiya-golf-club) template
