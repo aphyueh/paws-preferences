@@ -4,7 +4,7 @@ import { Card, CardImg } from "reactstrap";
 import Footer from "./components/Footer";
 import HeroSection from "./components/HeroSection";
 import NavbarWithSidebar from "./components/Navbar";
-import Summary from "./Summary";
+import Summary from "./components/Summary";
 import "./assets/css/bootstrap-icons.css";
 import "./assets/css/bootstrap.min.css";
 import "./assets/css/templatemo-tiya-golf-club.css";
